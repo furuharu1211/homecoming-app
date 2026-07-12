@@ -9,8 +9,13 @@
 </head>
 
 <body>
+    <div id="start-overlay" class="start-overlay">
+        <button id="start-button" class="start-button">🎵 タップして開始</button>
+    </div>
+
     <header>
         <h1>🏠 帰省予定一覧</h1>
+        <button id="bgm-toggle" class="bgm-toggle-button">🔊</button>
     </header>
 
     <main>
@@ -55,6 +60,20 @@
             </label>
 
             <label>
+                夜ごはん
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="dinner-status" value="家で食べたい🍙">
+                        🏠 家で食べたい
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="dinner-status" value="外で食べてくる">
+                        🍽️ 外で食べてくる
+                    </label>
+                </div>
+            </label>
+
+            <label>
                 メモ（任意）
                 <textarea id="input-memo"></textarea>
             </label>
@@ -64,7 +83,18 @@
                 <button type="button" id="cancel-button" class="cancel-button">キャンセル</button>
             </div>
         </form>
+
+        <!-- 予定登録完了時の表示（最初は非表示） -->
+        <div id="schedule-registered-panel" class="schedule-form hidden">
+            <p class="pickup-thanks-message">✅ 帰省予定を登録しました</p>
+        </div>
+
     </main>
+
+
+    <audio id="bgm" src="sounds/bgm.mp3" loop></audio>
+    <audio id="decision" src="sounds/decision.mp3"></audio>
+    <audio id="select" src="sounds/select.mp3"></audio>
 
     <script src="script.js"></script>
 </body>

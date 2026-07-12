@@ -17,7 +17,9 @@ public class Main {
         PickupResponseRepository responseRepository = new PickupResponseRepository();
 
         // JSON変換時に日付・時刻型(LocalDate, LocalTimeなど)を正しく扱えるようにする設定
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        ObjectMapper objectMapper = new ObjectMapper()
+        .registerModule(new JavaTimeModule())
+        .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         Javalin app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson(objectMapper, true));
@@ -40,16 +42,16 @@ public class Main {
 
             // LINEグループに通知を送る（メモ・夜ごはんの有無に応じて内容を組み立てる）
             StringBuilder message = new StringBuilder();
-            message.append("🚃 帰省予定が登録されました！\n");
-            message.append(saved.memberName).append("さん\n");
-            message.append(saved.arrivalDate).append(" ").append(saved.arrivalTime).append("着 ").append(saved.station);
+            message.append("🚃 帰省予定が登録されました！\n\n");
+            message.append(saved.memberName).append("さんは").append(saved.station).append("に\n");
+            message.append(saved.arrivalDate).append(" ").append(saved.arrivalTime).append("\nごろに到着予定です！");
 
             if (saved.dinnerStatus != null && !saved.dinnerStatus.isBlank()) {
-                message.append("\n🍚 夜ごはん：").append(saved.dinnerStatus);
+                message.append("\n\n夜ごはん：").append(saved.dinnerStatus);
             }
 
             if (saved.memo != null && !saved.memo.isBlank()) {
-                message.append("\n📝 メモ：").append(saved.memo);
+                message.append("\nメモ：").append(saved.memo);
             }
 
             LineNotifier.sendMessage(message.toString());
