@@ -37,6 +37,12 @@ public class Main {
             Schedule newSchedule = ctx.bodyAsClass(Schedule.class);
             Schedule saved = scheduleRepository.save(newSchedule);
             ctx.status(201).json(saved);
+
+            // LINEグループに通知を送る
+            String message = String.format(
+                    "🚃 帰省予定が登録されました！\n%sさん\n%s %s着 %s",
+                    saved.memberName, saved.arrivalDate, saved.arrivalTime, saved.station);
+            LineNotifier.sendMessage(message);
         });
 
         // ===== pickup_responses（送迎回答）関連 =====
@@ -63,5 +69,11 @@ public class Main {
             responseRepository.delete(responseId);
             ctx.status(204);
         });
+
+        app.post("/webhook", ctx -> {
+            System.out.println(ctx.body());
+            ctx.status(200);
+        });
+
     }
 }

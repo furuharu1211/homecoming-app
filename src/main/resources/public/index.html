@@ -16,7 +16,42 @@
             <!-- ここにJavaScriptが自動でカードを差し込みます -->
         </section>
 
-        <button class="add-button">＋ 新しい予定を登録</button>
+        <button id="add-button" class="add-button">＋ 新しい予定を登録</button>
+
+        <!-- 登録フォーム（最初は非表示） -->
+        <form id="schedule-form" class="schedule-form hidden">
+            <h2>新しい予定を登録</h2>
+
+            <label>
+                お名前
+                <input type="text" id="input-member-name" required>
+            </label>
+
+            <label>
+                到着日
+                <input type="date" id="input-arrival-date" required>
+            </label>
+
+            <label>
+                到着時刻
+                <input type="time" id="input-arrival-time" required>
+            </label>
+
+            <label>
+                駅・場所
+                <input type="text" id="input-station" required>
+            </label>
+
+            <label>
+                メモ（任意）
+                <textarea id="input-memo"></textarea>
+            </label>
+
+            <div class="form-buttons">
+                <button type="submit" class="submit-button">登録する</button>
+                <button type="button" id="cancel-button" class="cancel-button">キャンセル</button>
+            </div>
+        </form>
     </main>
 
     <script src="script.js"></script>

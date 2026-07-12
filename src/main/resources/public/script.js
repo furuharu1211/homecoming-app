@@ -4,15 +4,13 @@ async function loadSchedules() {
     const schedules = await response.json();
 
     const listElement = document.querySelector('.schedule-list');
-    listElement.innerHTML = ''; // 一旦空にする（固定表示だった太郎さんのカードを消す）
+    listElement.innerHTML = '';
 
-    // 予定が1件もない場合のメッセージ
     if (schedules.length === 0) {
         listElement.innerHTML = '<p class="empty-message">まだ帰省予定が登録されていません</p>';
         return;
     }
 
-    // 予定を1件ずつカードとして組み立てる
     for (const schedule of schedules) {
         const card = await createScheduleCard(schedule);
         listElement.appendChild(card);
@@ -24,11 +22,9 @@ async function createScheduleCard(schedule) {
     const card = document.createElement('div');
     card.className = 'schedule-card';
 
-    // この予定に対する送迎回答も取得する
     const responsesRes = await fetch(`/schedules/${schedule.id}/responses`);
     const responses = await responsesRes.json();
 
-    // 回答一覧をタグ形式のHTMLに変換
     const responseTags = responses.map(r =>
         `<span class="response-tag">${r.responderName}：${r.status}</span>`
     ).join('');
@@ -55,7 +51,6 @@ document.addEventListener('click', async (event) => {
     if (event.target.classList.contains('pickup-button')) {
         const scheduleId = event.target.dataset.scheduleId;
 
-        // 本来は名前を入力してもらう部分ですが、まずは簡易的にpromptで確認
         const name = prompt('あなたの名前を入力してください');
         if (!name) return;
 
@@ -65,8 +60,48 @@ document.addEventListener('click', async (event) => {
             body: JSON.stringify({ responderName: name, status: '行けるよ' })
         });
 
-        loadSchedules(); // 一覧を再取得して画面を更新
+        loadSchedules();
     }
+});
+
+// フォームの表示・非表示を切り替える
+const addButton = document.getElementById('add-button');
+const scheduleForm = document.getElementById('schedule-form');
+const cancelButton = document.getElementById('cancel-button');
+
+addButton.addEventListener('click', () => {
+    scheduleForm.classList.remove('hidden');
+    addButton.classList.add('hidden');
+});
+
+cancelButton.addEventListener('click', () => {
+    scheduleForm.classList.add('hidden');
+    addButton.classList.remove('hidden');
+    scheduleForm.reset();
+});
+
+// フォーム送信時の処理
+scheduleForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const newSchedule = {
+        memberName: document.getElementById('input-member-name').value,
+        arrivalDate: document.getElementById('input-arrival-date').value,
+        arrivalTime: document.getElementById('input-arrival-time').value,
+        station: document.getElementById('input-station').value,
+        memo: document.getElementById('input-memo').value
+    };
+
+    await fetch('/schedules', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSchedule)
+    });
+
+    scheduleForm.classList.add('hidden');
+    addButton.classList.remove('hidden');
+    scheduleForm.reset();
+    loadSchedules();
 });
 
 // ページが開かれたら実行
