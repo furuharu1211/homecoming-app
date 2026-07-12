@@ -16,16 +16,15 @@ public class Main {
         ScheduleRepository scheduleRepository = new ScheduleRepository();
         PickupResponseRepository responseRepository = new PickupResponseRepository();
 
+        // JSON変換時に日付・時刻型(LocalDate, LocalTimeなど)を正しく扱えるようにする設定
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
         Javalin app = Javalin.create(config -> {
             config.jsonMapper(new JavalinJackson(objectMapper, true));
+            config.staticFiles.add("/public"); // resources/public を静的ファイルとして配信
         }).start(7000);
 
-        app.get("/", ctx -> {
-            ctx.contentType("text/plain; charset=UTF-8");
-            ctx.result("帰省予定アプリ、起動しました！");
-        });
+        // ===== schedules（帰省予定）関連 =====
 
         // 帰省予定の一覧を取得する
         app.get("/schedules", ctx -> {
@@ -39,6 +38,8 @@ public class Main {
             Schedule saved = scheduleRepository.save(newSchedule);
             ctx.status(201).json(saved);
         });
+
+        // ===== pickup_responses（送迎回答）関連 =====
 
         // 特定の予定に対する送迎回答の一覧を取得する
         app.get("/schedules/{id}/responses", ctx -> {
