@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>帰省予定共有アプリ</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <h1>🏠 帰省予定一覧</h1>
@@ -24,7 +26,9 @@
 
             <label>
                 お名前
-                <input type="text" id="input-member-name" required>
+                <select id="input-member-name" required>
+                    <option value="" disabled selected>選択してください</option>
+                </select>
             </label>
 
             <label>
@@ -39,7 +43,15 @@
 
             <label>
                 駅・場所
-                <input type="text" id="input-station" required>
+                <select id="input-station-select" required>
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="自宅">自宅</option>
+                    <option value="相生山駅">相生山駅</option>
+                    <option value="植田駅">植田駅</option>
+                    <option value="その他">その他（自由入力）</option>
+                </select>
+                <input type="text" id="input-station-other" class="hidden station-other-input"
+                    placeholder="場所を入力してください">
             </label>
 
             <label>
@@ -56,4 +68,3 @@
 
     <script src="script.js"></script>
 </body>
-</html>

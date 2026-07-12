@@ -38,11 +38,21 @@ public class Main {
             Schedule saved = scheduleRepository.save(newSchedule);
             ctx.status(201).json(saved);
 
-            // LINEグループに通知を送る
-            String message = String.format(
-                    "🚃 帰省予定が登録されました！\n%sさん\n%s %s着 %s",
-                    saved.memberName, saved.arrivalDate, saved.arrivalTime, saved.station);
-            LineNotifier.sendMessage(message);
+            // LINEグループに通知を送る（メモ・夜ごはんの有無に応じて内容を組み立てる）
+            StringBuilder message = new StringBuilder();
+            message.append("🚃 帰省予定が登録されました！\n");
+            message.append(saved.memberName).append("さん\n");
+            message.append(saved.arrivalDate).append(" ").append(saved.arrivalTime).append("着 ").append(saved.station);
+
+            if (saved.dinnerStatus != null && !saved.dinnerStatus.isBlank()) {
+                message.append("\n🍚 夜ごはん：").append(saved.dinnerStatus);
+            }
+
+            if (saved.memo != null && !saved.memo.isBlank()) {
+                message.append("\n📝 メモ：").append(saved.memo);
+            }
+
+            LineNotifier.sendMessage(message.toString());
         });
 
         // ===== pickup_responses（送迎回答）関連 =====

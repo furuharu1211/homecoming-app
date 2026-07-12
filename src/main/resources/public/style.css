@@ -29,6 +29,8 @@ main {
     margin: 0 auto;
 }
 
+/* ===== 予定カード ===== */
+
 .schedule-card {
     background-color: #ffffff;
     border-radius: 12px;
@@ -65,6 +67,15 @@ main {
     margin-bottom: 12px;
 }
 
+.empty-message {
+    text-align: center;
+    color: #6e6e73;
+    font-size: 14px;
+    padding: 24px 0;
+}
+
+/* ===== 送迎セクション ===== */
+
 .pickup-section {
     border-top: 1px solid #f0f0f0;
     padding-top: 12px;
@@ -75,38 +86,149 @@ main {
 }
 
 .response-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     background-color: #e8f5e9;
     color: #2e7d32;
     font-size: 13px;
     padding: 4px 10px;
-    border-radius: 12px;
+    border-radius: 14px;
     margin-right: 6px;
+}
+
+.delete-response-button {
+    background: none;
+    border: none;
+    color: #2e7d32;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
 }
 
 .pickup-button {
     width: 100%;
-    padding: 12px;
-    background-color: #007aff;
+    padding: 14px;
+    background: linear-gradient(135deg, #64b5f6, #42a5f5);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 24px;
     font-size: 15px;
     font-weight: bold;
+    box-shadow: 0 4px 10px rgba(66, 165, 245, 0.35);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 .pickup-button:active {
-    background-color: #0051a8;
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(66, 165, 245, 0.35);
 }
+
+/* ===== 新規登録ボタン ===== */
 
 .add-button {
     width: 100%;
-    padding: 14px;
+    padding: 16px;
     background-color: #ffffff;
-    color: #007aff;
-    border: 2px dashed #007aff;
-    border-radius: 12px;
+    color: #42a5f5;
+    border: 2px dashed #90caf9;
+    border-radius: 24px;
     font-size: 15px;
     font-weight: bold;
     margin-top: 8px;
+    transition: transform 0.1s ease;
+}
+
+.add-button:active {
+    transform: scale(0.98);
+}
+
+/* ===== 登録フォーム ===== */
+
+.hidden {
+    display: none;
+}
+
+.schedule-form {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-form h2 {
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+
+.schedule-form label {
+    display: block;
+    font-size: 14px;
+    color: #6e6e73;
+    margin-bottom: 12px;
+}
+
+.schedule-form input,
+.schedule-form textarea,
+.schedule-form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border: 1px solid #d1d1d6;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: #ffffff;
+}
+
+.schedule-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.station-other-input {
+    margin-top: 8px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.submit-button {
+    flex: 1;
+    padding: 14px;
+    background: linear-gradient(135deg, #81c784, #66bb6a);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(102, 187, 106, 0.35);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.submit-button:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(102, 187, 106, 0.35);
+}
+
+.cancel-button {
+    flex: 1;
+    padding: 14px;
+    background-color: #f0f0f3;
+    color: #6e6e73;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: bold;
+    transition: transform 0.1s ease;
+}
+
+.cancel-button:active {
+    transform: scale(0.97);
 }

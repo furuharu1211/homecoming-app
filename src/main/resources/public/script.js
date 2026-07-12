@@ -1,3 +1,6 @@
+// ===== 家族の名前リスト（ここを実際の名前に書き換えてください） =====
+const FAMILY_MEMBERS = ['大真', '陽子', '陽輝', '亮真', '優月'];
+
 // ページが読み込まれたら、予定一覧を取得して表示する
 async function loadSchedules() {
     const response = await fetch('/schedules');
@@ -26,7 +29,10 @@ async function createScheduleCard(schedule) {
     const responses = await responsesRes.json();
 
     const responseTags = responses.map(r =>
-        `<span class="response-tag">${r.responderName}：${r.status}</span>`
+        `<span class="response-tag">
+            ${r.responderName}：${r.status}
+            <button class="delete-response-button" data-response-id="${r.id}">×</button>
+        </span>`
     ).join('');
 
     card.innerHTML = `
@@ -64,11 +70,54 @@ document.addEventListener('click', async (event) => {
     }
 });
 
-// フォームの表示・非表示を切り替える
+// 「×」ボタンで送迎回答を取り消す
+document.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('delete-response-button')) {
+        const responseId = event.target.dataset.responseId;
+
+        const confirmed = confirm('この回答を取り消しますか？');
+        if (!confirmed) return;
+
+        await fetch(`/responses/${responseId}`, {
+            method: 'DELETE'
+        });
+
+        loadSchedules();
+    }
+});
+
+// ===== フォーム関連の要素取得 =====
 const addButton = document.getElementById('add-button');
 const scheduleForm = document.getElementById('schedule-form');
 const cancelButton = document.getElementById('cancel-button');
+const memberNameSelect = document.getElementById('input-member-name');
+const stationSelect = document.getElementById('input-station-select');
+const stationOtherInput = document.getElementById('input-station-other');
 
+// お名前プルダウンの選択肢を、リストから自動で作る
+function populateMemberNameOptions() {
+    for (const name of FAMILY_MEMBERS) {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        memberNameSelect.appendChild(option);
+    }
+}
+populateMemberNameOptions();
+
+// 「駅・場所」で「その他」を選んだ時だけ、自由入力欄を表示する
+stationSelect.addEventListener('change', () => {
+    if (stationSelect.value === 'その他') {
+        stationOtherInput.classList.remove('hidden');
+        stationOtherInput.required = true;
+    } else {
+        stationOtherInput.classList.add('hidden');
+        stationOtherInput.required = false;
+        stationOtherInput.value = '';
+    }
+});
+
+// フォームの表示・非表示を切り替える
 addButton.addEventListener('click', () => {
     scheduleForm.classList.remove('hidden');
     addButton.classList.add('hidden');
@@ -78,17 +127,23 @@ cancelButton.addEventListener('click', () => {
     scheduleForm.classList.add('hidden');
     addButton.classList.remove('hidden');
     scheduleForm.reset();
+    stationOtherInput.classList.add('hidden');
 });
 
 // フォーム送信時の処理
 scheduleForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
+    // 「駅・場所」は、プルダウンが「その他」ならその自由入力欄の値を使う
+    const station = stationSelect.value === 'その他'
+        ? stationOtherInput.value
+        : stationSelect.value;
+
     const newSchedule = {
-        memberName: document.getElementById('input-member-name').value,
+        memberName: memberNameSelect.value,
         arrivalDate: document.getElementById('input-arrival-date').value,
         arrivalTime: document.getElementById('input-arrival-time').value,
-        station: document.getElementById('input-station').value,
+        station: station,
         memo: document.getElementById('input-memo').value
     };
 
@@ -101,6 +156,7 @@ scheduleForm.addEventListener('submit', async (event) => {
     scheduleForm.classList.add('hidden');
     addButton.classList.remove('hidden');
     scheduleForm.reset();
+    stationOtherInput.classList.add('hidden');
     loadSchedules();
 });
 

@@ -35,6 +35,7 @@ public class Database {
                     arrival_time TIME NOT NULL,
                     station VARCHAR(100) NOT NULL,
                     memo VARCHAR(255),
+                    dinner_status VARCHAR(20),
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """);
