@@ -11,7 +11,7 @@ public class Schedule {
     public LocalTime arrivalTime;
     public String station;
     public String memo;
-    public String dinnerStatus; // "家で食べる" or "外で食べる" or null
+    public String dinnerStatus; // "夜は家で食べたい🍙" or "夜は外で食べてくる" or null
     public LocalDateTime createdAt;
 
     public Schedule() {
